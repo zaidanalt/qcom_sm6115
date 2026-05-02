@@ -1,0 +1,19 @@
+name: Build NetHunter Kernel
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Source
+        uses: actions/checkout@v3
+
+      - name: Build Kernel
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential bc gcc-aarch64-linux-gnu libssl-dev
+          export ARCH=arm64
+          export CROSS_COMPILE=aarch64-linux-gnu-
+          make vendor/lime_defconfig
+          make -j$(nproc --all)
